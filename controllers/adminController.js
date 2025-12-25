@@ -1,8 +1,12 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { adminModel } = require('../model/adminModel')
+
+
 const adminUserLogin = async (req, res) => {
     const { admin_userEmail, admin_userPassword } = req.body
+    console.log('controller is hitting',admin_userEmail, admin_userPassword)
+
     try {
         const userCheck = await adminModel.findOne({ admin_userEmail })
 
