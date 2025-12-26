@@ -1,7 +1,7 @@
-
 const dotenv = require('dotenv')
 const express = require('express')
 const cors = require('cors')
+const bcrypt = require('bcrypt')
 const { adminRoute } = require('./routes/adminRoutes')
 const { adminModel } = require('./model/adminModel')
 const connectDB = require('./config/dbConnect')
@@ -9,25 +9,21 @@ const connectDB = require('./config/dbConnect')
 dotenv.config()
 const app = express()
 
-// ✅ 1. CORS FIRST
-app.use(cors({
+const isProduction = process.env.NODE_ENV === 'production'
+const corsWhiteList = isProduction
+  ? ['https://dashboard.inframedesigninstitute.com']
+  : ['http://localhost:3000', 'https://dashboard.inframedesigninstitute.com']
 
-    origin: [
-        'http://localhost:3000',
-        'https://dashboard.inframedesigninstitute.com'
-    ], // frontend
+app.use(cors({
+    origin: corsWhiteList,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 }))
 
-// ✅ 2. Body parser
 app.use(express.json())
 
-// ✅ 3. Routes
 app.use('/admin', adminRoute)
 
-app.get('/', (req, res) => {
-    res.send('backend is live')
-})
+app.get('/', (req, res) => res.send('Backend is live'))
 
 connectDB().then(async () => {
     const adminExist = await adminModel.find()
@@ -39,7 +35,8 @@ connectDB().then(async () => {
         })
     }
 
-    app.listen(process.env.PORT || 8200, '0.0.0.0', () => {
-        console.log(`✅ Server running on port ${process.env.PORT}`)
+    const PORT = process.env.PORT || 8200
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server running on port ${PORT}`)
     })
 })
