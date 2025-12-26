@@ -23,7 +23,7 @@ app.use(express.json())
 
 app.use('/admin', adminRoute)
 
-app.get('/', (req, res) => res.send('Backend is live'))
+app.get('/', (req, res) => res.send('Backend is live with cicd'))
 
 connectDB().then(async () => {
     const adminExist = await adminModel.find()
