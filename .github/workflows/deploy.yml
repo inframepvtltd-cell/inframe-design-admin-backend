@@ -21,6 +21,8 @@ jobs:
           REMOTE_USER: ${{ secrets.VPS_USER }}
           TARGET: "/var/www/apps/inframe-design-institute-admin-dashboard-backend"
           ARGS: "-avzr --delete --exclude='.env*' --exclude='node_modules'"
+        with:
+          options: '-vvv'
 
       - name: Install deps & reload PM2
         uses: appleboy/ssh-action@v1.0.3
